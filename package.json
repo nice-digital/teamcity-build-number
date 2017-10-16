@@ -1,0 +1,31 @@
+{
+  "name": "@nice-digital/teamcity-build-number",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "bin": {
+    "teamcity-build-number": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "npm run lint && npm run mocha",
+    "mocha": "mocha",
+    "lint": "eslint **/*.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=6.4.0",
+    "npm": ">=5.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "command-line-args": "^4.0.7",
+    "teamcity-properties": "^1.1.0"
+  },
+  "devDependencies": {
+    "@nice-digital/eslint-config": "^1.0.1",
+    "eslint": "^4.9.0",
+    "mocha": "^4.0.1"
+  }
+}

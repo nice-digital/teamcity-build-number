@@ -1,0 +1,6 @@
+{
+    "extends": "@nice-digital/eslint-config/es6",
+    "env": {
+    	"mocha": true
+    }
+}
