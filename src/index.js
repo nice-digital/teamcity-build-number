@@ -138,7 +138,7 @@ function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
  * @param      {string}  buildNumber  The build number
  */
 function outputTeamCityBuildNumber(buildNumber) {
-	console.log(`## teamcity[buildNumber '${ buildNumber }']`);
+	console.log(`##teamcity[buildNumber '${ buildNumber }']`);
 }
 
 /**
