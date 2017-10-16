@@ -6,18 +6,17 @@ const PullRequestRegex = /(\d+)\/merge/i,
 
 function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo) {
 
-	console.log("Settings build number...");
+	console.log("Setting build number...");
 
 	const tcProps = require("./tc-props")();
-	console.log("TeamCity properties", tcProps);
 
 	branch = sanitiseBranchName(branch);
 
-	const projectName = tcProps.get("system.teamcity.projectName"),
-		fullHash = tcProps.get("system.build.vcs.number"),
+	const projectName = tcProps.get("teamcity.projectName"),
+		fullHash = tcProps.get("build.vcs.number"),
 		shortHash = fullHash.slice(0,7).toUpperCase();
 
-	var buildNumber = tcProps.get("system.build.number");
+	var buildNumber = tcProps.get("build.number");
 
 	if(usePackageJsonVersion) {
 		console.log("##teamcity[blockOpened name='package.json version']");
