@@ -177,7 +177,7 @@ function trimBranchName(branchName) {
  *
  * @param      {string}  processCwd  Process current working directory
  * @param      {string}  packageRelativePath  relative path to the package.json file within the solutions directory
- * @return     {string}  { The new, trimmed branch name }
+ * @return     {string}  { The correct path to the package.json file. }
  */
 function getPackagePath(processCwd, packageRelativePath){
 	if (typeof(packageRelativePath) == "undefined" || packageRelativePath === null){
