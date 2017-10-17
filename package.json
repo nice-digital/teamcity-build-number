@@ -10,7 +10,7 @@
     "test": "npm run lint && npm run mocha",
     "mocha": "mocha",
     "lint": "eslint **/*.js",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "engines": {
     "node": ">=6.4.0",

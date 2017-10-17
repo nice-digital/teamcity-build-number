@@ -61,3 +61,15 @@ A GitHub authentication. Used for getting details of a Pull Request from the Git
 - Required: `true`
 
 A GitHub repository in the format *org/repo* e.g. *nhsevidence/NICE.TopHat*
+
+## Debugging this module
+
+To debug this module run a command like the following:
+
+node --inspect-brk bin/cli.js --branch mybranch --gitHubToken mytoken --gitHubRepo myrepo --usePackageJsonVersion
+
+then navigate chrome to:
+
+chrome://inspect
+
+a "Remote target" should pop up. Just click 'inspect' and chrome dev tools will debug the script.

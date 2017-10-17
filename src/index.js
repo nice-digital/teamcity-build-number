@@ -4,7 +4,7 @@ const path = require("path"),
 const PullRequestRegex = /(\d+)\/merge/i,
 	MaxBranchNameLength = 20;
 
-function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo) {
+function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath) {
 
 	console.log("Setting build number...");
 
@@ -23,7 +23,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo) 
 
 		console.log("Using package json version as build number");
 
-		const packageJsonPath = path.join(process.cwd(), "package.json"),
+		const packageJsonPath = getPackagePath(process.cwd(), packageRelativePath),
 			packageJson = require(packageJsonPath),
 			version = packageJson.version;
 
@@ -172,6 +172,20 @@ function trimBranchName(branchName) {
 	return branchName;
 }
 
+/**
+ * Joins up the process current working directory with a relative path for the package.json file
+ *
+ * @param      {string}  processCwd  Process current working directory
+ * @param      {string}  packageRelativePath  relative path to the package.json file within the solutions directory
+ * @return     {string}  { The new, trimmed branch name }
+ */
+function getPackagePath(processCwd, packageRelativePath){
+	if (typeof(packageRelativePath) == "undefined" || packageRelativePath === null){
+		packageRelativePath = "";
+	}
+	return path.join(processCwd, packageRelativePath, "package.json");
+}
+
 
 module.exports = {
 	setBuildNumber: setBuildNumber,
@@ -179,5 +193,6 @@ module.exports = {
 	outputTeamCityBuildNumber: outputTeamCityBuildNumber,
 	sanitiseBranchName: sanitiseBranchName,
 	trimBranchName: trimBranchName,
-	MaxBranchNameLength: MaxBranchNameLength
+	MaxBranchNameLength: MaxBranchNameLength,
+	getPackagePath: getPackagePath
 };
