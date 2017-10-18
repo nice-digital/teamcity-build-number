@@ -72,10 +72,13 @@ If a value is given such as "src", then it will look for said file in "[repo roo
 
 To debug this module run a command like the following:
 
+```sh
 node --inspect-brk bin/cli.js --branch mybranch --gitHubToken mytoken --gitHubRepo myrepo --usePackageJsonVersion
+```
 
 then navigate chrome to:
 
-chrome://inspect
+[chrome://inspect](chrome://inspect)
+
 
 a "Remote target" should pop up. Just click 'inspect' and chrome dev tools will debug the script.
