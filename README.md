@@ -60,4 +60,22 @@ A GitHub authentication. Used for getting details of a Pull Request from the Git
 - Type: `String`
 - Required: `true`
 
-A GitHub repository in the format *org/repo* e.g. *nhsevidence/NICE.TopHat*
+### packageRelativePath
+
+- Type: `String`
+- Required: `false`
+
+If no value is supplied the package.json file will be looked for in the root of the repository. 
+If a value is given such as "src", then it will look for said file in "[repo root]\src\package.json"
+
+## Debugging this module
+
+To debug this module run a command like the following:
+
+node --inspect-brk bin/cli.js --branch mybranch --gitHubToken mytoken --gitHubRepo myrepo --usePackageJsonVersion
+
+then navigate chrome to:
+
+chrome://inspect
+
+a "Remote target" should pop up. Just click 'inspect' and chrome dev tools will debug the script.
