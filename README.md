@@ -2,6 +2,34 @@
 
 > Sets the TeamCity build number based on the branch or Pull Request.
 
+[![npm](https://img.shields.io/npm/v/@nice-digital/teamcity-build-number.svg)](https://www.npmjs.com/package/@nice-digital/teamcity-build-number)
+[![License](https://img.shields.io/github/license/nhsevidence/teamcity-build-number.svg)](https://github.com/nhsevidenceteamcity-build-number/blob/master/LICENSE)
+[![Dependencies](https://img.shields.io/david/nhsevidence/teamcity-build-number.svg)](https://david-dm.org/nhsevidence/teamcity-build-number)
+[![Dev dependencies](https://img.shields.io/david/dev/nhsevidence/teamcity-build-number.svg)](https://david-dm.org/nhsevidence/teamcity-build-number?type=dev)
+
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [What is it?](#what-is-it)
+- [Build number format](#build-number-format)
+- [Usage](#usage)
+- [Options](#options)
+  - [branch](#branch)
+  - [usePackageJsonVersion](#usepackagessonversion)
+  - [gitHubToken](#gitHubToken)
+  - [gitHubRepo](#gitHubRepo)
+	- [packageRelativePath](#packageRelativePath)
+- [Debugging this module](#debugging-this-module)
+- [TeamCity config](#teamcity-config)
+	- [Update npm](#update-npm)
+  - [Branch specification](#branch-specification)
+</details>
+
+
+## What is it?
+
+Command line tool to set the build number based on the branch or pull request within TeamCity.
+
 Designed to be run as a build step within a TeamCity pipeline. It accesses system properties via `env.TEAMCITY_BUILD_PROPERTIES_FILE` but needs others passed in as arguments (see [options](#options) below).
 
 This can be used as a cross-platform replacement for the 'GitFlow' PowerShell build step.
@@ -80,5 +108,28 @@ then navigate chrome to:
 
 [chrome://inspect](chrome://inspect)
 
-
 a "Remote target" should pop up. Just click 'inspect' and chrome dev tools will debug the script.
+
+## TeamCity config
+
+### Update npm
+
+If you're using NVM or an npm version < 5.2 then you might need to run the following command before setting the build number:
+
+```sh
+npm install -g npm
+```
+
+> Note: if you're using a build agent with Node.js >= 8.2.0 this should have npm >= 5.3 pre-installed so you might not need to update npm.
+
+### Branch specification
+
+We recommend the following branch specification for your VCS root (
+ Build Configuration Settings -> Version Control Settings -> VCS Roots -> Branch specification). This automatically builds master and pull requests, and importantly will merge master into the PRs automatically.
+
+```sh
++:refs/heads/(master)
++:refs/pull/(*/merge)
+```
+
+See [Automatically Building Pull Requests from GitHub](https://blog.jetbrains.com/teamcity/2013/02/automatically-building-pull-requests-from-github-with-teamcity/) on the JetBrains blog for more info.
