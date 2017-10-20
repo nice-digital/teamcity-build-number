@@ -15,13 +15,13 @@
 - [Usage](#usage)
 - [Options](#options)
   - [branch](#branch)
-  - [usePackageJsonVersion](#usepackagessonversion)
-  - [gitHubToken](#gitHubToken)
-  - [gitHubRepo](#gitHubRepo)
-	- [packageRelativePath](#packageRelativePath)
+  - [usePackageJsonVersion](#usepackagejsonversion)
+  - [gitHubToken](#githubtoken)
+  - [gitHubRepo](#githubrepo)
+  - [packageRelativePath](#packagerelativepath)
 - [Debugging this module](#debugging-this-module)
 - [TeamCity config](#teamcity-config)
-	- [Update npm](#update-npm)
+  - [Update npm](#update-npm)
   - [Branch specification](#branch-specification)
 </details>
 
