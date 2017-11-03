@@ -3,7 +3,7 @@ const path = require("path"),
 
 const PullRequestRegex = /(\d+)\/merge/i,
 	MaxBranchNameLength = 20,
-	namingConventionRegex = /^([A-Z]){2,3}-\d+.+$/i;
+	namingConventionRegex = /^([A-Z]){2,3}-\d+.+$/i; //namingConventionRegex specifies 2 or 3 alphabetic characters, then a hyphen, then some numbers, then requires some more characters.
 
 function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath, enforceNamingConvention) {
 
@@ -207,7 +207,7 @@ function nameMatchesConvention(enforceNamingConvention, nameToTest){
 	if (typeof(enforceNamingConvention) == "undefined" || enforceNamingConvention == null || enforceNamingConvention === false){
 		return true;
 	}
-	return namingConventionRegex.test(nameToTest); //regex specifies 2 or 3 alphabetic characters, then a hyphen, then some numbers, then requires some more characters.
+	return namingConventionRegex.test(nameToTest); 
 }
 
 module.exports = {
