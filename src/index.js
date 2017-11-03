@@ -2,9 +2,10 @@ const path = require("path"),
 	https = require("https");
 
 const PullRequestRegex = /(\d+)\/merge/i,
-	MaxBranchNameLength = 20;
+	MaxBranchNameLength = 20,
+	namingConventionRegex = /^([A-Z]){2,3}-\d+.+$/i;
 
-function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath) {
+function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath, enforceNamingConvention) {
 
 	console.log("Setting build number...");
 
@@ -73,7 +74,16 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 			if(!data.mergeable) {
 				console.error(`Pull request #${ pullRequestId } is not mergeable into master.`);
 				process.exit(1);
-			} else {
+			}
+			else if (!nameMatchesConvention(enforceNamingConvention, data.head.ref)){
+				console.error(`Branch name '${ data.head.ref }' does not match naming convention: '${ namingConventionRegex }'`);
+				process.exit(1);
+			}
+			else if (!nameMatchesConvention(enforceNamingConvention, data.title)){
+				console.error(`Pull request title '${ data.title }' does not match naming convention: '${ namingConventionRegex }'`);
+				process.exit(1);
+			}
+			else {
 				console.log(`Pull request #${ pullRequestId } can be merged into master.`);
 				branch = trimBranchName(sanitiseBranchName(data.head.ref));
 				console.log(`Branch for PR #${ pullRequestId } is '${ branch }'.`);
@@ -186,6 +196,19 @@ function getPackagePath(processCwd, packageRelativePath){
 	return path.join(processCwd, packageRelativePath, "package.json");
 }
 
+/**
+ * Returns true or false about whether a string matches the naming convention.
+ *
+ * @param      {boolean}  enforceNamingConvention  Whether to enforce this naming convention
+ * @param      {string}  nameToTest  This will be either a branch name or a pull request name.
+ * @return     {boolean}  { true if the enforce naming convention isn't set, is set to false, or if the nameToTest matches the convention }
+ */
+function nameMatchesConvention(enforceNamingConvention, nameToTest){
+	if (typeof(enforceNamingConvention) == "undefined" || enforceNamingConvention == null || enforceNamingConvention === false){
+		return true;
+	}
+	return namingConventionRegex.test(nameToTest); //regex specifies 2 or 3 alphabetic characters, then a hyphen, then some numbers, then requires some more characters.
+}
 
 module.exports = {
 	setBuildNumber: setBuildNumber,
@@ -194,5 +217,6 @@ module.exports = {
 	sanitiseBranchName: sanitiseBranchName,
 	trimBranchName: trimBranchName,
 	MaxBranchNameLength: MaxBranchNameLength,
-	getPackagePath: getPackagePath
+	getPackagePath: getPackagePath,
+	nameMatchesConvention: nameMatchesConvention
 };
