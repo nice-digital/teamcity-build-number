@@ -68,5 +68,10 @@ describe("TeamCity build number", function() {
 			var returnValue = index.nameMatchesConvention(true, "PW-11 upgrade mspec");
 			assert.equal(returnValue, true);
 		});
+
+		it("when enforceNamingConvention is true and an invalid string is passed, false is returned", function() {
+			var returnValue = index.nameMatchesConvention(true, "PW11 upgrade mspec");
+			assert.equal(returnValue, false);
+		});
 	});
 });
