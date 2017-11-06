@@ -3,7 +3,10 @@ const path = require("path"),
 
 const PullRequestRegex = /(\d+)\/merge/i,
 	MaxBranchNameLength = 20,
-	namingConventionRegex = /^([A-Z]){2,3}-\d+.+$/i; //namingConventionRegex specifies 2 or 3 alphabetic characters, then a hyphen, then some numbers, then requires some more characters.
+	BranchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z]+[A-Za-z0-9-_]+$/, 
+	BranchNamingConventionRegexHelp = "BranchNamingConventionRegex example: 'PW-10-Upgrade-mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires another hyphen, an uppercase character, then some more characters (no spaces). separate words with hyphens or underscores",
+	PullRequestTitleNamingConventionRegex = /^[A-Z]{2,10}-\d+ [A-Z]+.+$/, 
+	PullRequestTitleNamingConventionRegexHelp = "PullRequestTitleNamingConventionRegex example: 'PW-10 Upgrade mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires space, an uppercase character, then some more characters.";
 
 function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath, enforceNamingConvention) {
 
@@ -75,12 +78,12 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 				console.error(`Pull request #${ pullRequestId } is not mergeable into master.`);
 				process.exit(1);
 			}
-			else if (!nameMatchesConvention(enforceNamingConvention, data.head.ref)){
-				console.error(`Branch name '${ data.head.ref }' does not match naming convention: '${ namingConventionRegex }'`);
+			else if (!nameMatchesConvention(enforceNamingConvention, BranchNamingConventionRegex, data.head.ref)){
+				console.error(`Branch name '${ data.head.ref }' does not match naming convention regex: '${ BranchNamingConventionRegex }' '${ BranchNamingConventionRegexHelp }'`);
 				process.exit(1);
 			}
-			else if (!nameMatchesConvention(enforceNamingConvention, data.title)){
-				console.error(`Pull request title '${ data.title }' does not match naming convention: '${ namingConventionRegex }'`);
+			else if (!nameMatchesConvention(enforceNamingConvention, PullRequestTitleNamingConventionRegex, data.title)){
+				console.error(`Pull request title '${ data.title }' does not match naming convention regex: '${ PullRequestTitleNamingConventionRegex }' '${ PullRequestTitleNamingConventionRegexHelp }'`);
 				process.exit(1);
 			}
 			else {
@@ -200,14 +203,17 @@ function getPackagePath(processCwd, packageRelativePath){
  * Returns true or false about whether a string matches the naming convention.
  *
  * @param      {boolean}  enforceNamingConvention  Whether to enforce this naming convention
+ * @param      {string}  namingConventionRegEx  The regular expression to apply to the nameToTest, if the enforceNamingConvention parameter is true.
  * @param      {string}  nameToTest  This will be either a branch name or a pull request name.
  * @return     {boolean}  { true if the enforce naming convention isn't set, is set to false, or if the nameToTest matches the convention }
  */
-function nameMatchesConvention(enforceNamingConvention, nameToTest){
-	if (typeof(enforceNamingConvention) == "undefined" || enforceNamingConvention == null || enforceNamingConvention === false){
+function nameMatchesConvention(enforceNamingConvention, namingConventionRegEx, nameToTest){
+	if (enforceNamingConvention === false 
+		|| typeof enforceNamingConvention === "undefined" || enforceNamingConvention === null 
+		|| typeof namingConventionRegEx === "undefined" || namingConventionRegEx === null){
 		return true;
 	}
-	return namingConventionRegex.test(nameToTest); 
+	return namingConventionRegEx.test(nameToTest); 
 }
 
 module.exports = {
