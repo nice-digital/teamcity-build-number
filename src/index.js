@@ -12,15 +12,15 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 
 	console.log("Setting build number...");
 
-	//const tcProps = require("./tc-props")();
+	const tcProps = require("./tc-props")();
 
 	branch = sanitiseBranchName(branch);
 
-	const projectName = "Comments", //tcProps.get("teamcity.projectName"),
-		fullHash = "fsdfds", //tcProps.get("build.vcs.number"),
-		shortHash = "fds" //fullHash.slice(0,7).toUpperCase();
+	const projectName = tcProps.get("teamcity.projectName"),
+		fullHash = tcProps.get("build.vcs.number"),
+		shortHash = fullHash.slice(0,7).toUpperCase();
 
-	var buildNumber = 1;//tcProps.get("build.number");
+	var buildNumber = tcProps.get("build.number");
 
 	if(usePackageJsonVersion) {
 		console.log("##teamcity[blockOpened name='package.json version']");
