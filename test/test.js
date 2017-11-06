@@ -33,8 +33,6 @@ describe("TeamCity build number", function() {
 	});
 
 	describe("Name Matches Convention", function() {
-		var branchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z]+[A-Za-z0-9-_]+$/, 
-			pullRequestTitleNamingConventionRegex = /^[A-Z]{2,10}-\d+ [A-Z]+.+$/;
 		
 		it("when enforceNamingConvention is not set, true is always returned", function() {
 			var returnValue = index.nameMatchesConvention(undefined, null, null);
@@ -52,62 +50,62 @@ describe("TeamCity build number", function() {
 		});
 
 		it("when enforceNamingConvention is true and an undefined object is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, undefined);
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, undefined);
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and a null is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, null);
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, null);
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and an empty string is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and an undefined regex is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "PW-11 upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "PW-11 upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and a null regex is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "PW-11 upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "PW-11 upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and a valid branch string is passed, true is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "PW-11-Upgrade-mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "PW-11-Upgrade-mspec");
 			assert.equal(returnValue, true);
 		});
 
 		it("when enforceNamingConvention is true and an invalid branch string is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "PW11 upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "PW11 upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and an invalid, lowercase branch string is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "pw-11-Upgrade-mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "pw-11-Upgrade-mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and an invalid branch string with spaces is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, branchNamingConventionRegex, "pw-11-Upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.BranchNamingConventionRegex, "pw-11-Upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and a valid pull request string is passed, true is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, pullRequestTitleNamingConventionRegex, "PW-11 Upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.PullRequestTitleNamingConventionRegex, "PW-11 Upgrade mspec");
 			assert.equal(returnValue, true);
 		});
 
 		it("when enforceNamingConvention is true and an invalid pull request string is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, pullRequestTitleNamingConventionRegex, "PW11 upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.PullRequestTitleNamingConventionRegex, "PW11 upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 
 		it("when enforceNamingConvention is true and an invalid, lowercase pull request string is passed, false is returned", function() {
-			var returnValue = index.nameMatchesConvention(true, pullRequestTitleNamingConventionRegex, "pw-11 Upgrade mspec");
+			var returnValue = index.nameMatchesConvention(true, index.PullRequestTitleNamingConventionRegex, "pw-11 Upgrade mspec");
 			assert.equal(returnValue, false);
 		});
 	});
