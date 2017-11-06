@@ -7,9 +7,10 @@ const optionDefinitions = [
 	{ name: "gitHubToken", type: String },
 	{ name: "gitHubRepo", type: String },
 	{ name: "usePackageJsonVersion", type: Boolean },
-	{ name: "packageRelativePath", type: String }
+	{ name: "packageRelativePath", type: String },
+	{ name: "enforceNamingConvention", type: Boolean }
 ];
 
 const options = commandLineArgs(optionDefinitions);
 
-require("../src/").setBuildNumber(options.usePackageJsonVersion, options.branch, options.gitHubToken, options.gitHubRepo, options.packageRelativePath);
+require("../src/").setBuildNumber(options.usePackageJsonVersion, options.branch, options.gitHubToken, options.gitHubRepo, options.packageRelativePath, options.enforceNamingConvention);

@@ -96,6 +96,14 @@ A GitHub authentication. Used for getting details of a Pull Request from the Git
 If no value is supplied the package.json file will be looked for in the root of the repository. 
 If a value is given such as "src", then it will look for said file in "[repo root]\src\package.json"
 
+### enforceNamingConvention
+
+- Type: `Boolean`
+- Required: `false`
+
+If no value is supplied the naming conventions on the branch and pull request names are not enforced. 
+If a true value is passed then the naming conventions are enforced and the build will be cancelled with the reason logged.
+
 ## Debugging this module
 
 To debug this module run a command like the following:
