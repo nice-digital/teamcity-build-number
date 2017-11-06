@@ -12,15 +12,15 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 
 	console.log("Setting build number...");
 
-	const tcProps = require("./tc-props")();
+	//const tcProps = require("./tc-props")();
 
 	branch = sanitiseBranchName(branch);
 
-	const projectName = tcProps.get("teamcity.projectName"),
-		fullHash = tcProps.get("build.vcs.number"),
-		shortHash = fullHash.slice(0,7).toUpperCase();
+	const projectName = "Comments", //tcProps.get("teamcity.projectName"),
+		fullHash = "fsdfds", //tcProps.get("build.vcs.number"),
+		shortHash = "fds" //fullHash.slice(0,7).toUpperCase();
 
-	var buildNumber = tcProps.get("build.number");
+	var buildNumber = 1;//tcProps.get("build.number");
 
 	if(usePackageJsonVersion) {
 		console.log("##teamcity[blockOpened name='package.json version']");
@@ -79,11 +79,11 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 				process.exit(1);
 			}
 			else if (!nameMatchesConvention(enforceNamingConvention, BranchNamingConventionRegex, data.head.ref)){
-				console.error(`Branch name '${ data.head.ref }' does not match naming convention regex: '${ BranchNamingConventionRegex }' '${ BranchNamingConventionRegexHelp }'`);
+				console.error(`Branch name '${ data.head.ref }' does not match naming convention regex: '${ BranchNamingConventionRegex }' ${ BranchNamingConventionRegexHelp }`);
 				process.exit(1);
 			}
 			else if (!nameMatchesConvention(enforceNamingConvention, PullRequestTitleNamingConventionRegex, data.title)){
-				console.error(`Pull request title '${ data.title }' does not match naming convention regex: '${ PullRequestTitleNamingConventionRegex }' '${ PullRequestTitleNamingConventionRegexHelp }'`);
+				console.error(`Pull request title '${ data.title }' does not match naming convention regex: '${ PullRequestTitleNamingConventionRegex }' ${ PullRequestTitleNamingConventionRegexHelp }`);
 				process.exit(1);
 			}
 			else {
