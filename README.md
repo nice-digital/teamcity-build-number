@@ -10,19 +10,21 @@
 <details>
 <summary><strong>Table of contents</strong></summary>
 
-- [What is it?](#what-is-it)
-- [Build number format](#build-number-format)
-- [Usage](#usage)
-- [Options](#options)
-  - [branch](#branch)
-  - [usePackageJsonVersion](#usepackagejsonversion)
-  - [gitHubToken](#githubtoken)
-  - [gitHubRepo](#githubrepo)
-  - [packageRelativePath](#packagerelativepath)
-- [Debugging this module](#debugging-this-module)
-- [TeamCity config](#teamcity-config)
-  - [Update npm](#update-npm)
-  - [Branch specification](#branch-specification)
+- [TeamCity build number](#teamcity-build-number)
+	- [What is it?](#what-is-it)
+	- [Build number format](#build-number-format)
+	- [Usage](#usage)
+	- [Options](#options)
+		- [branch](#branch)
+		- [usePackageJsonVersion](#usepackagejsonversion)
+		- [gitHubToken](#githubtoken)
+		- [gitHubRepo](#githubrepo)
+		- [packageRelativePath](#packagerelativepath)
+		- [enforceNamingConvention](#enforcenamingconvention)
+	- [Debugging this module](#debugging-this-module)
+	- [TeamCity config](#teamcity-config)
+		- [Update npm](#update-npm)
+		- [Branch specification](#branch-specification)
 </details>
 
 
@@ -53,7 +55,7 @@ Note: the following examples assume a version of *1.2.3*, a build counter of *99
 With npm>=5.2, use the Command Line Interface via npx:
 
 ```sh
-npx @nice-digital/teamcity-build-number --branch=%teamcity.build.branch% --usePackageJsonVersion=true --gitHubToken=%GITHUB_TOKEN% --gitHubRepo=%system.GitHubOwnerRepo%
+npx @nice-digital/teamcity-build-number --branch=%teamcity.build.branch% --usePackageJsonVersion --gitHubToken=%GITHUB_TOKEN% --gitHubRepo=%system.GitHubOwnerRepo%
 ```
 
 ## Options
@@ -63,6 +65,7 @@ npx @nice-digital/teamcity-build-number --branch=%teamcity.build.branch% --usePa
 - Type: `String`
 - Required: `true`
 - CLI alias: `b`
+- Example: `--branch=%teamcity.build.branch%`
 
 The branch to build from e.g. `%teamcity.build.branch%`
 
@@ -71,27 +74,32 @@ The branch to build from e.g. `%teamcity.build.branch%`
 - Type: `Boolean`
 - Required: `false`
 - Default: `false`
+- Example: `--usePackageJsonVersion`
 
-Whether to use the package.json version as the build number.
+Whether to use the package.json version as the build number. Only needed if you are using package.json version, and it doesn't require a value e.g. just `--usePackageJsonVersion`.
 
-Note: this assumes that the `%system.build.vcs.number%` TeamCity parameter is a build countere, e.g. *Build number format*:  `%build.counter%`
+Note: in v0.x this option could be used like `--usePackageJsonVersion=true` but this is no longer the case.
 
 ### gitHubToken
 
 - Type: `String`
 - Required: `true` to build Pull Requests
 
-A GitHub authentication. Used for getting details of a Pull Request from the GitHub API.
+A GitHub authentication token. Used for getting details of a Pull Request from the GitHub API. Must have access to the repository set in `gitHubRepo`.
 
 ### gitHubRepo
 
 - Type: `String`
 - Required: `true`
+- Example: `--gitHubRepo nhsevidence/guidance-web`
+
+The GitHub organisation (or username) and repository to check for status of Pull Requests etc.
 
 ### packageRelativePath
 
 - Type: `String`
 - Required: `false`
+- Example: `--packageRelativePath src/client`
 
 If no value is supplied the package.json file will be looked for in the root of the repository. 
 If a value is given such as "src", then it will look for said file in "[repo root]\src\package.json"
@@ -100,9 +108,12 @@ If a value is given such as "src", then it will look for said file in "[repo roo
 
 - Type: `Boolean`
 - Required: `false`
+- Example: `--enforceNamingConvention`
 
 If no value is supplied the naming conventions on the branch and pull request names are not enforced. 
-If a true value is passed then the naming conventions are enforced and the build will be cancelled with the reason logged.
+If present (which means `true`) then the naming conventions are enforced and the build will be cancelled with the reason logged.
+
+Note: in v0.x this option could be used like `--enforceNamingConvention=true` but this is no longer the case.
 
 ## Debugging this module
 

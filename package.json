@@ -20,12 +20,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "command-line-args": "^4.0.7",
-    "teamcity-properties": "^1.1.0"
+    "command-line-args": "^5.0.2",
+    "teamcity-properties": "^2.0.0"
   },
   "devDependencies": {
-    "@nice-digital/eslint-config": "^1.0.1",
-    "eslint": "^4.9.0",
-    "mocha": "^4.0.1"
+    "@nice-digital/eslint-config": "^1.0.3",
+    "eslint": "^5.15.1",
+    "mocha": "^6.0.2"
   }
 }

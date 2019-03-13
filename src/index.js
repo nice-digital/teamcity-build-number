@@ -3,9 +3,9 @@ const path = require("path"),
 
 const PullRequestRegex = /(\d+)\/merge/i,
 	MaxBranchNameLength = 20,
-	BranchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z][A-Za-z0-9-]+$/, 
+	BranchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z][A-Za-z0-9-]+$/,
 	BranchNamingConventionRegexHelp = "BranchNamingConventionRegex example: 'PW-10-Upgrade-mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires another hyphen, an uppercase character, then some more characters (no spaces). Separate words with hyphens.",
-	PullRequestTitleNamingConventionRegex = /^[A-Z]{2,10}-\d+ [A-Z].+$/, 
+	PullRequestTitleNamingConventionRegex = /^[A-Z]{2,10}-\d+ [A-Z].+$/,
 	PullRequestTitleNamingConventionRegexHelp = "PullRequestTitleNamingConventionRegex example: 'PW-10 Upgrade mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires space, an uppercase character, then some more characters.";
 
 function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, packageRelativePath, enforceNamingConvention) {
@@ -33,15 +33,11 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 
 		console.log(`Current package json version is '${ version }'`);
 
-		// Assume buildNumber is a counter if we're using the package.json build number
-		if(!buildNumber.toString().match(/^\d+$/)) {
-			throw new Error("Expected system.build.number to be a build counter integer, but found '${ buildNumber }'");
-		}
-
-		console.log(`Build counter is '${ buildNumber }'`);
+		var buildCounter = tcProps.get("build.counter");
+		console.log(`Build counter is '${ buildCounter }'`);
 
 		// Use Major.Minor.Patch.Counter format
-		buildNumber = `${ version }.${ buildNumber }`;
+		buildNumber = `${ version }.${ buildCounter }`;
 
 		console.log("##teamcity[blockClosed name='package.json version']");
 	}
@@ -95,6 +91,9 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 
 				console.log("##teamcity[blockClosed name='Pull Request']");
 			}
+		})
+		.catch((error) => {
+			console.error(`##teamcity[message text='Error getting pull request info: ${error.message}' errorDetails='${error.stack}' status='ERROR']`);
 		});
 }
 
@@ -109,7 +108,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
 
 	const auth = `${ gitHubToken }:x-oauth-basic`,
-		authToken = new Buffer(auth).toString("base64"),
+		authToken = Buffer.from(auth).toString("base64"),
 		requestOptions = {
 			method: "GET",
 			protocol: "https:",
@@ -208,12 +207,12 @@ function getPackagePath(processCwd, packageRelativePath){
  * @return     {boolean}  { true if the enforce naming convention isn't set, is set to false, or if the nameToTest matches the convention }
  */
 function nameMatchesConvention(enforceNamingConvention, namingConventionRegEx, nameToTest){
-	if (enforceNamingConvention === false 
-		|| typeof enforceNamingConvention === "undefined" || enforceNamingConvention === null 
+	if (enforceNamingConvention === false
+		|| typeof enforceNamingConvention === "undefined" || enforceNamingConvention === null
 		|| typeof namingConventionRegEx === "undefined" || namingConventionRegEx === null){
 		return true;
 	}
-	return namingConventionRegEx.test(nameToTest); 
+	return namingConventionRegEx.test(nameToTest);
 }
 
 module.exports = {
