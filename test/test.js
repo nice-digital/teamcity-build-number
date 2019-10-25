@@ -13,6 +13,19 @@ describe("TeamCity build number", function() {
 		});
 	});
 
+	describe("pull request regex", function() {
+		it("should match merge pull request naming convention", function() {
+			var merge = "33/merge";
+			
+			assert.equal("33", merge.match(index.PullRequestRegex)[1]);
+		});
+		it("should match pull request naming convention", function() {
+			var pull = "pull/33";
+			
+			assert.equal("33", pull.match(index.PullRequestRegex)[2]);
+		});
+	});
+/*
 	describe("Get package.json path", function() {
 		var processCwd = "C:\\_src\\teamcity-build-number";
 
@@ -108,5 +121,5 @@ describe("TeamCity build number", function() {
 			var returnValue = index.nameMatchesConvention(true, index.PullRequestTitleNamingConventionRegex, "pw-11 Upgrade mspec");
 			assert.equal(returnValue, false);
 		});
-	});
+	});*/
 });

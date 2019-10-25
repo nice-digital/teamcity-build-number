@@ -1,7 +1,7 @@
 const path = require("path"),
 	https = require("https");
 
-const PullRequestRegex = /(\d+)\/merge/i,
+const PullRequestRegex = /(\d+)\/merge|pull\/(\d+)/i,
 	MaxBranchNameLength = 20,
 	BranchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z][A-Za-z0-9-]+$/,
 	BranchNamingConventionRegexHelp = "BranchNamingConventionRegex example: 'PW-10-Upgrade-mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires another hyphen, an uppercase character, then some more characters (no spaces). Separate words with hyphens.",
@@ -55,7 +55,6 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	}
 
 	const pullRequestMatch = branch.match(PullRequestRegex);
-
 	if(!pullRequestMatch) {
 		console.log("Building a feature branch");
 		branch = trimBranchName(branch);
@@ -65,7 +64,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	}
 
 	console.log("##teamcity[blockOpened name='Pull Request']");
-	var pullRequestId = Number(pullRequestMatch[1]);
+	var pullRequestId = pullRequestMatch[1] || (pullRequestMatch[2]);
 	console.log(`Using pull request #${ pullRequestId }`);
 
 	getPullRequest(gitHubToken, gitHubRepo, pullRequestId)
@@ -225,5 +224,6 @@ module.exports = {
 	getPackagePath: getPackagePath,
 	nameMatchesConvention: nameMatchesConvention,
 	BranchNamingConventionRegex: BranchNamingConventionRegex,
-	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex
+	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex,
+	PullRequestRegex:PullRequestRegex
 };

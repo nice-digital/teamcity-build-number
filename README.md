@@ -144,11 +144,12 @@ npm install -g npm
 ### Branch specification
 
 We recommend the following branch specification for your VCS root (
- Build Configuration Settings -> Version Control Settings -> VCS Roots -> Branch specification). This automatically builds master and pull requests, and importantly will merge master into the PRs automatically.
+ Build Configuration Settings -> Version Control Settings -> VCS Roots -> Branch specification). This automatically builds master.
 
 ```sh
 +:refs/heads/(master)
-+:refs/pull/(*/merge)
 ```
 
-See [Automatically Building Pull Requests from GitHub](https://blog.jetbrains.com/teamcity/2013/02/automatically-building-pull-requests-from-github-with-teamcity/) on the JetBrains blog for more info.
+DO NOT specify `+:refs/pull/(*/merge)` in the branch specification this will allow for unauthorised pull requests to run in TC. If you want to build pull requests use the build feature "Pull requests" this will allow you to limit pull requests from members and collaborators.
+
+See [Building GitHub pull requests with TeamCity](https://blog.jetbrains.com/teamcity/2019/08/building-github-pull-requests-with-teamcity/) on the JetBrains blog for more info.
