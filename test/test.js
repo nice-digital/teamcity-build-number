@@ -13,6 +13,20 @@ describe("TeamCity build number", function() {
 		});
 	});
 
+	describe("pull request regex", function() {
+		it("should match pull request naming convention", function() {
+			var pull = "33/pull";
+			
+			assert.equal(pull, pull.match(index.PullRequestRegex)[0]);
+		});
+
+		it("should match merge pull request naming convention", function() {
+			var merge = "33/merge";
+			
+			assert.equal(merge, merge.match(index.PullRequestRegex)[0]);
+		});
+	});
+
 	describe("Get package.json path", function() {
 		var processCwd = "C:\\_src\\teamcity-build-number";
 

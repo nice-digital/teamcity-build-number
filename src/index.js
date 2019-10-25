@@ -225,5 +225,6 @@ module.exports = {
 	getPackagePath: getPackagePath,
 	nameMatchesConvention: nameMatchesConvention,
 	BranchNamingConventionRegex: BranchNamingConventionRegex,
-	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex
+	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex,
+	PullRequestRegex:PullRequestRegex
 };
