@@ -55,7 +55,6 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	}
 
 	const pullRequestMatch = branch.match(PullRequestRegex);
-	console.log(pullRequestMatch);
 	if(!pullRequestMatch) {
 		console.log("Building a feature branch");
 		branch = trimBranchName(branch);
