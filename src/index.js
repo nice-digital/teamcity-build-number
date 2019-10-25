@@ -64,7 +64,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	}
 
 	console.log("##teamcity[blockOpened name='Pull Request']");
-	var pullRequestId = branch.includes("merge") ? (pullRequestMatch[1]) : (pullRequestMatch[2]);
+	var pullRequestId = pullRequestMatch[1] || (pullRequestMatch[2]);
 	console.log(`Using pull request #${ pullRequestId }`);
 
 	getPullRequest(gitHubToken, gitHubRepo, pullRequestId)

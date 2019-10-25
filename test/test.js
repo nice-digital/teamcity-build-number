@@ -14,16 +14,15 @@ describe("TeamCity build number", function() {
 	});
 
 	describe("pull request regex", function() {
-		it("should match pull request naming convention", function() {
-			var pull = "pull/33";
-			
-			assert.equal(pull, pull.match(index.PullRequestRegex)[0]);
-		});
-
 		it("should match merge pull request naming convention", function() {
 			var merge = "33/merge";
 			
-			assert.equal(merge, merge.match(index.PullRequestRegex)[0]);
+			assert.equal("33", merge.match(index.PullRequestRegex)[1]);
+		});
+		it("should match pull request naming convention", function() {
+			var pull = "pull/33";
+			
+			assert.equal("33", pull.match(index.PullRequestRegex)[2]);
 		});
 	});
 /*
