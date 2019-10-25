@@ -1,7 +1,7 @@
 const path = require("path"),
 	https = require("https");
 
-const PullRequestRegex = /(\d+)\/merge/i,
+const PullRequestRegex = /(\d+\/(?:merge|pull))/i,
 	MaxBranchNameLength = 20,
 	BranchNamingConventionRegex = /^[A-Z]{2,10}-\d+-[A-Z][A-Za-z0-9-]+$/,
 	BranchNamingConventionRegexHelp = "BranchNamingConventionRegex example: 'PW-10-Upgrade-mspec'. i.e. 2 - 10 uppercase alphabetic characters (matching Jira project key), then a hyphen, then some numbers (matching Jira reference), then requires another hyphen, an uppercase character, then some more characters (no spaces). Separate words with hyphens.",
