@@ -80,6 +80,8 @@ Whether to use the package.json version as the build number. Only needed if you 
 
 Note: in v0.x this option could be used like `--usePackageJsonVersion=true` but this is no longer the case.
 
+Note 2: If you use this you need to add system.build.counter and point it to %build.counter% in the System Properties in the Parameters of the Build Configuration.
+
 ### gitHubToken
 
 - Type: `String`
