@@ -100,7 +100,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
  * Gets a pull request object from the GitHub API, returning a promise.
  *
  * @param      {string}   gitHubToken    The GitHub authentication token
- * @param      {string}   gitHubRepo     The string repo e.g. "nhsevidence/NICE.TopHat"
+ * @param      {string}   gitHubRepo     The string repo e.g. "nice-digital/NICE.TopHat"
  * @param      {integer}   pullRequestId  The pull request identifier
  * @return     {Promise}  A promise that resolves with the PR object.
  */
