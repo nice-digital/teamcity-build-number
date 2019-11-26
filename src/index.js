@@ -49,7 +49,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	if (branch == "master")
 	{
 		console.log("Building master");
-		buildNumber = `${ buildNumber }-r${ shortHash }`;
+		buildNumber = `${ buildNumber }+r${ shortHash }`;
 		outputTeamCityBuildNumber(buildNumber);
 		return buildNumber;
 	}
