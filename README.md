@@ -52,9 +52,11 @@ Note: the following examples assume a version of *1.2.3*, a build counter of *99
 
 | Branch                     | Version              |
 | -------------------------- | -------------------- |
-| master                     | 1.2.3.99-ra1b2c3d    |
+| master                     | 1.2.3.99+ra1b2c3d    |
 | pull request (from branch) | 1.2.3.99-branch-name |
 | feature branch             | 1.2.3.99-branch-name |
+
+We are using the semver 2.0 convention: https://semver.org/
 
 ## Usage
 
