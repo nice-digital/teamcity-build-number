@@ -40,7 +40,13 @@ This can be used as a cross-platform replacement for the 'GitFlow' PowerShell bu
 
 The build number format is in the form:
 
-**Major.Minor.Patch.Counter-(BranchName OR rCommitHash]**
+**Pre-release:**
+
+Major.Minor.Patch.Counter-BranchName
+
+**Release:**
+
+Major.Minor.Patch.Counter+rCommitHash
 
 Note: the following examples assume a version of *1.2.3*, a build counter of *99* and a commit hash of *a1b2c3d*:
 
