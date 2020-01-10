@@ -38,7 +38,9 @@ This can be used as a cross-platform replacement for the 'GitFlow' PowerShell bu
 
 ## Build number format
 
-The build number format is in the form:
+We are using the semver 2.0 convention: https://semver.org/ this means that all pre-release packages are distinguied by a `-` and all release packages by `+`
+
+As an example the build number format is in the form:
 
 **Pre-release:**
 
@@ -56,7 +58,9 @@ Note: the following examples assume a version of *1.2.3*, a build counter of *99
 | pull request (from branch) | 1.2.3.99-branch-name |
 | feature branch             | 1.2.3.99-branch-name |
 
-We are using the semver 2.0 convention: https://semver.org/
+**Visual Studio 2015 and nuget packages**
+
+Please note the nuget package manager in some older versions of VS may not show the release packages because it doesn't support semver 2.0 conventions, therefore please ensure you are using the latest nuget package manager at least VSIX 3.6.0.
 
 ## Usage
 
