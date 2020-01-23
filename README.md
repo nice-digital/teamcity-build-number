@@ -60,7 +60,11 @@ Note: the following examples assume a version of *1.2.3*, a build counter of *99
 
 **Visual Studio 2015 and nuget packages**
 
-Please note the nuget package manager in some older versions of VS may not show the release packages because it doesn't support semver 2.0 conventions, therefore please ensure you are using the latest nuget package manager at least VSIX 3.6.0.
+Please note the nuget package manager in some older versions of VS may not show the release packages because it doesn't support semver 2.0 conventions, therefore please ensure you are using the latest nuget package manager at least VSIX 3.6.0
+
+**TeamCity and Nuget restore**
+
+Semver 2.0 is only fully supported in Nuget Clients 4.5+ so please ensure you have this otherwise you may not be able to restore packages.
 
 ## Usage
 
