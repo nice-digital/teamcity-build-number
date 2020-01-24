@@ -67,14 +67,24 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	var pullRequestId = pullRequestMatch[1] || (pullRequestMatch[2]);
 	console.log(`Using pull request #${ pullRequestId }`);
 
+	const githubMergeAttemptLimit = 6;
+	let githubMergeAttemptCount = 0;
+
 	getPullDetails();
 
 	function getPullDetails() {
 		getPullRequest(gitHubToken, gitHubRepo, pullRequestId)
 			.then(data => {
+				githubMergeAttemptCount++;
 				if (data.mergeable === null) { // this case occurs if Github hasn't finished the merge assesment at the time of the request
-					console.log(`Pull request #${pullRequestId} hasn't been assessed for merge into master yet. Trying again in 5s.`);
-					setTimeout(getPullDetails, 5000);
+					console.log(`Pull request #${pullRequestId} hasn't been assessed for merge into master yet. Attempt ${githubMergeAttemptCount} of ${githubMergeAttemptLimit}.`);
+					if (githubMergeAttemptCount < githubMergeAttemptLimit) {
+						setTimeout(getPullDetails, 5000);
+					} else {
+						console.log(`Github hasn't assessed pull request #${pullRequestId}'s mergeability. Presuming mergeable.`);
+						data.mergeable = true;
+						processPullDetails(data);
+					}
 				} else {
 					processPullDetails(data);
 				}
@@ -84,7 +94,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 					`##teamcity[message text='Error getting pull request info: ${error.message}' errorDetails='${error.stack}' status='ERROR']`
 				);
 			});
-	};
+	}
 
 	function processPullDetails(data) {
 		if (!data.mergeable) {
