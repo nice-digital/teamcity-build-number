@@ -67,7 +67,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	var pullRequestId = pullRequestMatch[1] || (pullRequestMatch[2]);
 	console.log(`Using pull request #${ pullRequestId }`);
 
-	const githubMergeAttemptLimit = 6;
+	const githubMergeAttemptLimit = 12;
 	let githubMergeAttemptCount = 0;
 
 	getPullDetails();
@@ -81,9 +81,10 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 					if (githubMergeAttemptCount < githubMergeAttemptLimit) {
 						setTimeout(getPullDetails, 5000);
 					} else {
-						console.log(`Github hasn't assessed pull request #${pullRequestId}'s mergeability. Presuming mergeable.`);
-						data.mergeable = true;
-						processPullDetails(data);
+						console.error(
+							`##teamcity[message text='#Couldn't assess mergeability of pull request ${pullRequestId} from Github.' status='ERROR']`
+						);
+						process.exit(1);
 					}
 				} else {
 					processPullDetails(data);
