@@ -67,33 +67,73 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 	var pullRequestId = pullRequestMatch[1] || (pullRequestMatch[2]);
 	console.log(`Using pull request #${ pullRequestId }`);
 
-	getPullRequest(gitHubToken, gitHubRepo, pullRequestId)
-		.then((data) => {
-			if(!data.mergeable) {
-				console.error(`Pull request #${ pullRequestId } is not mergeable into master.`);
-				process.exit(1);
-			}
-			else if (!nameMatchesConvention(enforceNamingConvention, BranchNamingConventionRegex, data.head.ref)){
-				console.error(`Branch name '${ data.head.ref }' does not match naming convention regex: '${ BranchNamingConventionRegex }' ${ BranchNamingConventionRegexHelp }`);
-				process.exit(1);
-			}
-			else if (!nameMatchesConvention(enforceNamingConvention, PullRequestTitleNamingConventionRegex, data.title)){
-				console.error(`Pull request title '${ data.title }' does not match naming convention regex: '${ PullRequestTitleNamingConventionRegex }' ${ PullRequestTitleNamingConventionRegexHelp }`);
-				process.exit(1);
-			}
-			else {
-				console.log(`Pull request #${ pullRequestId } can be merged into master.`);
-				branch = trimBranchName(sanitiseBranchName(data.head.ref));
-				console.log(`Branch for PR #${ pullRequestId } is '${ branch }'.`);
-				buildNumber = `${ buildNumber }-${ branch }`;
-				outputTeamCityBuildNumber(buildNumber);
+	const githubMergeAttemptLimit = 12;
+	let githubMergeAttemptCount = 0;
 
-				console.log("##teamcity[blockClosed name='Pull Request']");
-			}
-		})
-		.catch((error) => {
-			console.error(`##teamcity[message text='Error getting pull request info: ${error.message}' errorDetails='${error.stack}' status='ERROR']`);
-		});
+	getPullDetails();
+
+	function getPullDetails() {
+		getPullRequest(gitHubToken, gitHubRepo, pullRequestId)
+			.then(data => {
+				githubMergeAttemptCount++;
+				if (data.mergeable === null) { // this case occurs if Github hasn't finished the merge assesment at the time of the request
+					console.log(`Pull request #${pullRequestId} hasn't been assessed for merge into master yet. Attempt ${githubMergeAttemptCount} of ${githubMergeAttemptLimit}.`);
+					if (githubMergeAttemptCount < githubMergeAttemptLimit) {
+						setTimeout(getPullDetails, 5000);
+					} else {
+						console.error(
+							`##teamcity[message text='#Couldn't assess mergeability of pull request ${pullRequestId} from Github.' status='ERROR']`
+						);
+						process.exit(1);
+					}
+				} else {
+					processPullDetails(data);
+				}
+			})
+			.catch(error => {
+				console.error(
+					`##teamcity[message text='Error getting pull request info: ${error.message}' errorDetails='${error.stack}' status='ERROR']`
+				);
+			});
+	}
+
+	function processPullDetails(data) {
+		if (!data.mergeable) {
+			console.error(
+				`Pull request #${pullRequestId} is not mergeable into master.`
+			);
+			process.exit(1);
+		} else if (
+			!nameMatchesConvention(
+				enforceNamingConvention,
+				BranchNamingConventionRegex,
+				data.head.ref
+			)
+		) {
+			console.error(
+				`Branch name '${data.head.ref}' does not match naming convention regex: '${BranchNamingConventionRegex}' ${BranchNamingConventionRegexHelp}`
+			);
+			process.exit(1);
+		} else if (
+			!nameMatchesConvention(
+				enforceNamingConvention,
+				PullRequestTitleNamingConventionRegex,
+				data.title
+			)
+		) {
+			console.error(
+				`Pull request title '${data.title}' does not match naming convention regex: '${PullRequestTitleNamingConventionRegex}' ${PullRequestTitleNamingConventionRegexHelp}`
+			);
+			process.exit(1);
+		} else {
+			console.log(`Pull request #${pullRequestId} can be merged into master.`);
+			branch = trimBranchName(sanitiseBranchName(data.head.ref));
+			console.log(`Branch for PR #${pullRequestId} is '${branch}'.`);
+			buildNumber = `${buildNumber}-${branch}`;
+			outputTeamCityBuildNumber(buildNumber);
+			console.log("##teamcity[blockClosed name='Pull Request']");
+		}
+	}
 }
 
 /**
@@ -105,17 +145,16 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
  * @return     {Promise}  A promise that resolves with the PR object.
  */
 function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
-
-	const auth = `${ gitHubToken }:x-oauth-basic`,
+	const auth = `${gitHubToken}:x-oauth-basic`,
 		authToken = Buffer.from(auth).toString("base64"),
 		requestOptions = {
 			method: "GET",
 			protocol: "https:",
 			port: 443,
 			hostname: "api.github.com",
-			path: `/repos/${ gitHubRepo }/pulls/${ pullRequestId }`,
+			path: `/repos/${gitHubRepo}/pulls/${pullRequestId}`,
 			headers: {
-				"Authorization": `Basic ${authToken}`,
+				Authorization: `Basic ${authToken}`,
 				"User-Agent": "TeamCity"
 			}
 		};
@@ -123,10 +162,16 @@ function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
 	return new Promise((resolve, reject) => {
 		const request = https.request(requestOptions, function(response) {
 			const body = [];
-			response.on("data", (d) => { body.push(d); });
+			response.on("data", d => {
+				body.push(d);
+			});
 			response.on("end", () => {
 				if (response.statusCode < 200 || response.statusCode > 299) {
-					reject(new Error(`Failed to load page, status code: ${ response.statusCode }`));
+					reject(
+						new Error(
+							`Failed to load page, status code: ${response.statusCode}`
+						)
+					);
 				} else {
 					try {
 						const parsed = JSON.parse(body.join(""));
@@ -149,7 +194,7 @@ function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
  * @param      {string}  buildNumber  The build number
  */
 function outputTeamCityBuildNumber(buildNumber) {
-	console.log(`##teamcity[buildNumber '${ buildNumber }']`);
+	console.log(`##teamcity[buildNumber '${buildNumber}']`);
 }
 
 /**
@@ -174,10 +219,12 @@ function sanitiseBranchName(branchName) {
  * @return     {string}  { The new, trimmed branch name }
  */
 function trimBranchName(branchName) {
-	if(branchName.length > MaxBranchNameLength) {
-		console.log(`Branch '${ branchName }'' name too long, trimming to ${ MaxBranchNameLength } chars.`);
+	if (branchName.length > MaxBranchNameLength) {
+		console.log(
+			`Branch '${branchName}'' name too long, trimming to ${MaxBranchNameLength} chars.`
+		);
 		branchName = branchName.substring(0, MaxBranchNameLength);
-		console.log(`Trimmed to '${ branchName }'.`);
+		console.log(`Trimmed to '${branchName}'.`);
 	}
 
 	return branchName;
@@ -190,8 +237,11 @@ function trimBranchName(branchName) {
  * @param      {string}  packageRelativePath  relative path to the package.json file within the solutions directory
  * @return     {string}  { The correct path to the package.json file. }
  */
-function getPackagePath(processCwd, packageRelativePath){
-	if (typeof(packageRelativePath) == "undefined" || packageRelativePath === null){
+function getPackagePath(processCwd, packageRelativePath) {
+	if (
+		typeof packageRelativePath == "undefined" ||
+		packageRelativePath === null
+	) {
 		packageRelativePath = "";
 	}
 	return path.join(processCwd, packageRelativePath, "package.json");
@@ -205,10 +255,18 @@ function getPackagePath(processCwd, packageRelativePath){
  * @param      {string}  nameToTest  This will be either a branch name or a pull request name.
  * @return     {boolean}  { true if the enforce naming convention isn't set, is set to false, or if the nameToTest matches the convention }
  */
-function nameMatchesConvention(enforceNamingConvention, namingConventionRegEx, nameToTest){
-	if (enforceNamingConvention === false
-		|| typeof enforceNamingConvention === "undefined" || enforceNamingConvention === null
-		|| typeof namingConventionRegEx === "undefined" || namingConventionRegEx === null){
+function nameMatchesConvention(
+	enforceNamingConvention,
+	namingConventionRegEx,
+	nameToTest
+) {
+	if (
+		enforceNamingConvention === false ||
+		typeof enforceNamingConvention === "undefined" ||
+		enforceNamingConvention === null ||
+		typeof namingConventionRegEx === "undefined" ||
+		namingConventionRegEx === null
+	) {
 		return true;
 	}
 	return namingConventionRegEx.test(nameToTest);
@@ -225,5 +283,5 @@ module.exports = {
 	nameMatchesConvention: nameMatchesConvention,
 	BranchNamingConventionRegex: BranchNamingConventionRegex,
 	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex,
-	PullRequestRegex:PullRequestRegex
+	PullRequestRegex: PullRequestRegex
 };
