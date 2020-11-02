@@ -11,3 +11,9 @@ TEAMCITY_BUILD_PROPERTIES_FILE=build.properties npx @nice-digital/teamcity-build
 ```
 
 You'll need to find a valid pull request and project to use in place of *1/merge* and *global-nav* and you'll need to set the `GITHUB_TOKEN` environment variable to be a valid GitHub access token.
+
+This uses the current version of TCBN on npm. To use the local version of the script, use the following:
+
+```sh
+TEAMCITY_BUILD_PROPERTIES_FILE=build.properties node ../bin/cli.js --branch 26/merge --gitHubToken $GITHUB_TOKEN --gitHubRepo nice-digital/global-nav --usePackageJsonVersion --packageRelativePath test --enforceNamingConvention
+```
