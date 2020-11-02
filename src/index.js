@@ -147,7 +147,7 @@ function setBuildNumber(
  * @param {String} message
  */
 function reportBuildProblem(message) {
-	console.error(`##teamcity[buildProblem description='${escapeTeamCityServiceMessage(message)}'`);
+	console.error(`##teamcity[buildProblem description='${escapeTeamCityServiceMessage(message)}']`);
 	process.exit(1);
 }
 
