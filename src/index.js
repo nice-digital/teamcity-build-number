@@ -182,7 +182,8 @@ function getPullRequest(gitHubToken, gitHubRepo, pullRequestId) {
 		hostname: "api.github.com",
 		path: `/repos/${gitHubRepo}/pulls/${pullRequestId}`,
 		headers: {
-			Token: gitHubToken,
+			Accept: "application/vnd.github.v3+json",
+			Authorization: `token ${gitHubToken}`,
 			"User-Agent": "TeamCity",
 		},
 	};
