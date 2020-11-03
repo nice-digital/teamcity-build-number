@@ -12,6 +12,7 @@
 
 - [TeamCity build number](#teamcity-build-number)
 	- [What is it?](#what-is-it)
+	- [Local development](#local-development)
 	- [Build number format](#build-number-format)
 	- [Usage](#usage)
 	- [Options](#options)
@@ -35,6 +36,10 @@ Command line tool to set the build number based on the branch or pull request wi
 Designed to be run as a build step within a TeamCity pipeline. It accesses system properties via `env.TEAMCITY_BUILD_PROPERTIES_FILE` but needs others passed in as arguments (see [options](#options) below).
 
 This can be used as a cross-platform replacement for the 'GitFlow' PowerShell build step.
+
+## Local development
+
+Use the _example_ folder for local development and testing.
 
 ## Build number format
 
