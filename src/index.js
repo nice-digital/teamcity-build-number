@@ -57,7 +57,7 @@ function setBuildNumber(
 	console.log(`Current build number is '${buildNumber}'`);
 	console.log(`Branch is '${branch}'`);
 
-	if (branch == "master") {
+	if (branch == "master" || branch == "main") {
 		console.log("Building master");
 		buildNumber = `${buildNumber}+r${shortHash}`;
 		outputTeamCityBuildNumber(buildNumber);
