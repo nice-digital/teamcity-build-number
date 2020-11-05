@@ -58,7 +58,7 @@ function setBuildNumber(
 	console.log(`Branch is '${branch}'`);
 
 	if (branch == "master" || branch == "main") {
-		console.log("Building master");
+		console.log(`Building ${branch}`);
 		buildNumber = `${buildNumber}+r${shortHash}`;
 		outputTeamCityBuildNumber(buildNumber);
 		return buildNumber;
@@ -89,7 +89,7 @@ function setBuildNumber(
 				if (data.mergeable === null && !data.merged) {
 					// this case occurs if Github hasn't finished the merge assesment at the time of the request
 					console.log(
-						`Pull request #${pullRequestId} hasn't been assessed for merge into master yet. Attempt ${githubMergeAttemptCount} of ${githubMergeAttemptLimit}.`
+						`Pull request #${pullRequestId} hasn't been assessed for merge into ${data.base.ref} yet. Attempt ${githubMergeAttemptCount} of ${githubMergeAttemptLimit}.`
 					);
 					if (githubMergeAttemptCount < githubMergeAttemptLimit) {
 						setTimeout(getPullDetails, 5000);
@@ -112,7 +112,7 @@ function setBuildNumber(
 		if (data.merged) {
 			reportBuildProblem(`Pull request #${pullRequestId} is already merged`);
 		} else if (!data.mergeable) {
-			reportBuildProblem(`Pull request #${pullRequestId} is not mergeable into master`);
+			reportBuildProblem(`Pull request #${pullRequestId} is not mergeable into ${data.base.ref}`);
 		} else if (
 			!nameMatchesConvention(
 				enforceNamingConvention,
@@ -132,7 +132,7 @@ function setBuildNumber(
 				`Pull request title '${data.title}' does not match naming convention regex: '${PullRequestTitleNamingConventionRegex}' ${PullRequestTitleNamingConventionRegexHelp}`
 			);
 		} else {
-			console.log(`Pull request #${pullRequestId} can be merged into master.`);
+			console.log(`Pull request #${pullRequestId} can be merged into ${data.base.ref}.`);
 			branch = trimBranchName(sanitiseBranchName(data.head.ref));
 			console.log(`Branch for PR #${pullRequestId} is '${branch}'.`);
 			buildNumber = `${buildNumber}-${branch}`;
