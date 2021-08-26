@@ -3,15 +3,16 @@
 > Sets the TeamCity build number based on the branch or Pull Request.
 
 [![npm](https://img.shields.io/npm/v/@nice-digital/teamcity-build-number.svg)](https://www.npmjs.com/package/@nice-digital/teamcity-build-number)
-[![License](https://img.shields.io/github/license/nhsevidence/teamcity-build-number.svg)](https://github.com/nhsevidenceteamcity-build-number/blob/master/LICENSE)
-[![Dependencies](https://img.shields.io/david/nhsevidence/teamcity-build-number.svg)](https://david-dm.org/nhsevidence/teamcity-build-number)
-[![Dev dependencies](https://img.shields.io/david/dev/nhsevidence/teamcity-build-number.svg)](https://david-dm.org/nhsevidence/teamcity-build-number?type=dev)
+[![License](https://img.shields.io/github/license/nice-digital/teamcity-build-number.svg)](https://github.com/nice-digital/teamcity-build-number/blob/master/LICENSE)
+[![Dependencies](https://img.shields.io/david/nice-digital/teamcity-build-number.svg)](https://david-dm.org/nice-digital/teamcity-build-number)
+[![Dev dependencies](https://img.shields.io/david/dev/nice-digital/teamcity-build-number.svg)](https://david-dm.org/nice-digital/teamcity-build-number?type=dev)
 
 <details>
 <summary><strong>Table of contents</strong></summary>
 
 - [TeamCity build number](#teamcity-build-number)
 	- [What is it?](#what-is-it)
+	- [Local development](#local-development)
 	- [Build number format](#build-number-format)
 	- [Usage](#usage)
 	- [Options](#options)
@@ -35,6 +36,10 @@ Command line tool to set the build number based on the branch or pull request wi
 Designed to be run as a build step within a TeamCity pipeline. It accesses system properties via `env.TEAMCITY_BUILD_PROPERTIES_FILE` but needs others passed in as arguments (see [options](#options) below).
 
 This can be used as a cross-platform replacement for the 'GitFlow' PowerShell build step.
+
+## Local development
+
+Use the _example_ folder for local development and testing.
 
 ## Build number format
 
@@ -109,7 +114,7 @@ A GitHub authentication token. Used for getting details of a Pull Request from t
 
 - Type: `String`
 - Required: `true`
-- Example: `--gitHubRepo nhsevidence/guidance-web`
+- Example: `--gitHubRepo nice-digital/guidance-web`
 
 The GitHub organisation (or username) and repository to check for status of Pull Requests etc.
 
