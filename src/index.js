@@ -37,7 +37,7 @@ function setBuildNumber(usePackageJsonVersion, branch, gitHubToken, gitHubRepo, 
 		console.log(`Build counter is '${ buildCounter }'`);
 
 		// Use Major.Minor.Patch.Counter format
-		buildNumber = `${ version }.${ buildCounter }`;
+		buildNumber = setPackageJsonVersion(version, buildCounter);
 
 		console.log("##teamcity[blockClosed name='package.json version']");
 	}
@@ -214,6 +214,14 @@ function nameMatchesConvention(enforceNamingConvention, namingConventionRegEx, n
 	return namingConventionRegEx.test(nameToTest);
 }
 
+function setPackageJsonVersion(version, buildCounter)
+{
+	version = version.split(".");
+	delete version[2];
+
+	return `${ version.join(".") }${ buildCounter }`;
+}
+
 module.exports = {
 	setBuildNumber: setBuildNumber,
 	getPullRequest: getPullRequest,
@@ -223,6 +231,7 @@ module.exports = {
 	MaxBranchNameLength: MaxBranchNameLength,
 	getPackagePath: getPackagePath,
 	nameMatchesConvention: nameMatchesConvention,
+	setPackageJsonVersion: setPackageJsonVersion,
 	BranchNamingConventionRegex: BranchNamingConventionRegex,
 	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex,
 	PullRequestRegex:PullRequestRegex

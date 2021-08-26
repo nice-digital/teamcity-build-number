@@ -25,6 +25,16 @@ describe("TeamCity build number", function() {
 			assert.equal("33", pull.match(index.PullRequestRegex)[2]);
 		});
 	});
+
+
+	describe("usePackageJsonVersion", function() {
+		it("should set the correct version for patch", function() {
+			var version = "0.1.0";
+			var buildCounter = "1234";
+
+			assert.equal("0.1.1234", index.setPackageJsonVersion(version, buildCounter));
+		});
+	});
 /*
 	describe("Get package.json path", function() {
 		var processCwd = "C:\\_src\\teamcity-build-number";
