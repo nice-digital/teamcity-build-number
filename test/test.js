@@ -16,23 +16,30 @@ describe("TeamCity build number", function() {
 	describe("pull request regex", function() {
 		it("should match merge pull request naming convention", function() {
 			var merge = "33/merge";
-			
+
 			assert.equal("33", merge.match(index.PullRequestRegex)[1]);
 		});
 		it("should match pull request naming convention", function() {
 			var pull = "pull/33";
-			
+
 			assert.equal("33", pull.match(index.PullRequestRegex)[2]);
 		});
 	});
 
 
 	describe("usePackageJsonVersion", function() {
-		it("should set the correct version for patch", function() {
+		it("should set the correct version for patch using release", function() {
 			var version = "0.1.0";
 			var buildCounter = "1234";
 
 			assert.equal("0.1.1234", index.setPackageJsonVersion(version, buildCounter));
+		});
+
+		it("should set the correct version for patch using pre-release", function() {
+			var version = "1.2.1234-alpha.0";
+			var buildCounter = "1235";
+
+			assert.equal("1.2.1235-alpha.0", index.setPackageJsonVersion(version, buildCounter));
 		});
 	});
 /*
@@ -56,7 +63,7 @@ describe("TeamCity build number", function() {
 	});
 
 	describe("Name Matches Convention", function() {
-		
+
 		it("when enforceNamingConvention is not set, true is always returned", function() {
 			var returnValue = index.nameMatchesConvention(undefined, null, null);
 			assert.equal(returnValue, true);

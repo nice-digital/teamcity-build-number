@@ -216,10 +216,18 @@ function nameMatchesConvention(enforceNamingConvention, namingConventionRegEx, n
 
 function setPackageJsonVersion(version, buildCounter)
 {
-	version = version.split(".");
-	delete version[2];
+	if(version.includes("alpha"))
+	{
+		const regex = /\d+(?=-\w+)/;
+		version = version.replace(regex, buildCounter);
 
-	return `${ version.join(".") }${ buildCounter }`;
+	} else {
+		version = version.split(".");
+		delete version[2];
+		version = `${ version.join(".") }${ buildCounter }`;
+	}
+
+	return version;
 }
 
 module.exports = {
