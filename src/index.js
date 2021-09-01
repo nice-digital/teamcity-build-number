@@ -48,7 +48,7 @@ function setBuildNumber(
 		console.log(`Build counter is '${buildCounter}'`);
 
 		// Use Major.Minor.Patch.Counter format
-		buildNumber = `${version}.${buildCounter}`;
+		buildNumber = setPackageJsonVersion(version, buildCounter);
 
 		console.log("##teamcity[blockClosed name='package.json version']");
 	}
@@ -301,6 +301,22 @@ function nameMatchesConvention(
 	return namingConventionRegEx.test(nameToTest);
 }
 
+function setPackageJsonVersion(version, buildCounter)
+{
+	if(version.includes("alpha"))
+	{
+		const regex = /\d+(?=-\w+)/;
+		version = version.replace(regex, buildCounter);
+
+	} else {
+		version = version.split(".");
+		delete version[2];
+		version = `${ version.join(".") }${ buildCounter }`;
+	}
+
+	return version;
+}
+
 module.exports = {
 	setBuildNumber: setBuildNumber,
 	getPullRequest: getPullRequest,
@@ -310,6 +326,7 @@ module.exports = {
 	MaxBranchNameLength: MaxBranchNameLength,
 	getPackagePath: getPackagePath,
 	nameMatchesConvention: nameMatchesConvention,
+	setPackageJsonVersion: setPackageJsonVersion,
 	BranchNamingConventionRegex: BranchNamingConventionRegex,
 	PullRequestTitleNamingConventionRegex: PullRequestTitleNamingConventionRegex,
 	PullRequestRegex: PullRequestRegex,
